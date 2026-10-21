@@ -1,0 +1,52 @@
+cv.lasso.klcompreg <- function(y, x, lambda = NULL, nlambda = 100, type = "grouped", nfolds = 10,
+                               folds = NULL, seed = NULL) {
+  n <- dim(y)[1]   ;   D <- dim(y)[2]
+  ina <- 1:n
+  if ( is.null(folds) )  folds <- Compositional::makefolds(ina, nfolds = nfolds, stratified = FALSE, seed = seed)
+  nfolds <- length(folds)
+
+  if ( is.null( colnames(x) ) ) {
+    p <- dim(x)[2]
+    nama <- c("constant", paste("X", 1:p, sep = "") )
+  } else  nama <- c("constant", colnames(x) )
+  colnames(x) <- nama[-1]
+
+  mod <- glmnet::glmnet(x, y, family = "multinomial", lambda = NULL, nlambda = 100,
+                        type.multinomial = type)
+
+  lambda <- mod$lambda
+  nlambda <- length(mod$lambda)
+  be <- list()
+  beta <- mod$beta
+  for ( i in 1:nlambda ) {
+    ini <- beta[[ 1 ]][, i]
+    for ( j in 2:D )  ini <- cbind(ini, beta[[ j ]][, i])
+    be[[ i ]] <- ini
+    colnames(be[[ i ]]) <- paste0("Y", 1:D)
+  }
+  names(be) <- paste("lambda=", lambda, sep="")
+
+  kld <- matrix(nrow = nfolds, ncol = nlambda )
+
+  for ( k in 1:nfolds ) {
+    xtest <- x[ folds[[ k ]], ]
+    xtrain <- x[ -folds[[ k ]], ]
+    ytest <- y[ folds[[ k ]], ]
+    ytrain <- y[ -folds[[ k ]], ]
+    mod <- glmnet::glmnet(xtrain, ytrain, family = "multinomial", nlambda = nlambda, lambda = lambda,
+                          type.multinomial = type)
+    est <- predict(mod, newx = xtest, type = "response")
+    for ( j in 1:length(est) ) {
+      kl <- ytest * log(ytest / est[, , i])
+      kl[is.infinite(kl)] <- NA
+      kld[k, j] <- sum(kl, na.rm = TRUE)
+    }
+    kld <- cbind( lambda, Rfast::colmeans(kld) )
+    colnames(kld) <- c("lambda", "KLD")
+    lopt <- which.min(kld[, 2])
+    res <- list(kld = kld, lambda.opt = lambda[lopt], be = mod$be[[ lopt ]] )
+  }
+
+  res
+}
+

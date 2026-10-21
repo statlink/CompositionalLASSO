@@ -1,0 +1,39 @@
+cv.lasso.compreg <- function(y, x, lambda = NULL, nlambda = 100, nfolds = 10,
+                               folds = NULL, seed = NULL, graph = FALSE) {
+  y <- Compositional::alr(y)
+  n <- dim(y)[1]  ## sample size
+  ina <- 1:n
+  if ( is.null(folds) )  folds <- Compositional::makefolds(ina, nfolds = nfolds,
+                                                           stratified = FALSE, seed = seed)
+  nfolds <- length(folds)
+  foldid <- numeric(n)
+  for ( i in 1:nfolds )  foldid[ folds[[ i ]] ] <- i
+
+  if ( is.null(lambda) ) {
+    lambda <- glmnet::glmnet(x, y, nlambda = nlambda, lambda = NULL, family = "mgaussian")$lambda
+  }
+
+  kld <- matrix(nrow = nfolds, ncol = nlambda )
+
+  for ( k in 1:nfolds ) {
+    xtest <- x[ folds[[ k ]], ]
+    xtrain <- x[ -folds[[ k ]], ]
+    ytest <- y[ folds[[ k ]], ]
+    ytrain <- y[ -folds[[ k ]], ]
+    ybtrain <- yb[ -folds[[ k ]], ]
+    mod <- glmnet::glmnet(xtrain, ytrain, nlambda = nlambda, lambda = lambda, family = "mgaussian")
+    est <- predict(mod, newx = xtest)
+    for ( j in 1:length(est) ) {
+      yest <- Compositional::alrinv( est[[ j ]] )
+      kl <- ytest * log(ytest / yest)
+      kl[is.infinite(kl)] <- NA
+      kld[k, j] <- sum(kl, na.rm = TRUE)
+    }
+    kld <- cbind( lambda, Rfast::colsums(kld) / n )
+    colnames(kld) <- c("lambda", "KLD")
+    lopt <- which.min(kld[, 2])
+    res <- list(kld = kld, lambda.opt = lambda[lopt], be = mod$be[[ lopt ]] )
+  }
+
+  res
+}

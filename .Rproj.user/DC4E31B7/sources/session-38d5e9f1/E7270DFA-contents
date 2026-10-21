@@ -1,0 +1,46 @@
+lasso.compreg <- function(y, x, lambda = NULL, nlambda = 100, xnew = NULL) {
+  D <- dim(y)[2]   ;   d <- D - 1
+  if ( is.null( colnames(x) ) ) {
+    p <- dim(x)[2]
+    nama <- c("constant", paste("X", 1:p, sep = "") )
+  } else  nama <- c("constant", colnames(x) )
+  colnames(x) <- nama[-1]
+
+  z <- Compositional::alr(y)
+  mod <- glmnet::glmnet(x, z, nlambda = nlambda, lambda = lambda, family = "mgaussian")
+
+  lambda <- mod$lambda
+  nlambda <- length(lambda)
+  be <- list()
+  beta <- mod$beta
+  a0 <- mod$a0
+
+  for ( i in 1:nlambda ) {
+    ini <- beta[[ 1 ]][, i]
+    for ( j in 2:d )  ini <- cbind(ini, beta[[ j ]][, i])
+    be[[ i ]] <- rbind(mod$a0[, i], ini)
+    colnames(be[[ i ]]) <- paste0("Y", 2:D)
+    rownames(be[[ i ]]) <- nama
+  }
+  names(be) <- paste("lambda=", lambda, sep="")
+
+  est <- predict( mod, newx = x )
+  info <- cbind(lambda, 0)
+  for ( i in 1:nlambda ) {
+    mu <- Compositional::alrinv(est[, , i])
+    kl <- y * log(y / mu)
+    kl[ is.infinite(kl) ] <- NA
+    info[i, 2] <- sum(kl, na.rm = TRUE)
+  }
+  colnames(info) <- c("lambda", "KLD")
+
+  est <- NULL
+  if ( !is.null(xnew) ) {
+    est <- list()
+    mu <- predict(mod, newx = xnew)
+    for ( i in 1:nlambda )   est[[ i ]] <- Compositional::alrinv(mu[, , i])
+    names(est) <- paste("lambda=", lambda, sep="")
+  }
+
+  list(be = be, info = info, est = est)
+}
