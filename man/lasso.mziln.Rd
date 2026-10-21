@@ -1,11 +1,11 @@
 \name{lasso.mziln}
 \alias{lasso.mziln}
 \title{
-LASSO log-ratio regression with compositional responses
+LASSO using the multivariate zero inflated logistic normal regression
 }
 
 \description{
-LASSO log-ratio regression with compositional responses.
+LASSO using the multivariate zero inflated logistic normal regression.
 }
 
 \usage{
@@ -38,7 +38,6 @@ If you have new data use it, otherwise leave it NULL.
 
 \details{
 The function uses the glmnet package to perform LASSO penalised regression.
-For more details see the function in that package.
 }
 
 \value{
@@ -58,11 +57,12 @@ matrices with the fitted values, where each matrix corresponds to each value of 
 \references{
 Li Z., Lee K., Karagas M. R., Madan J. C., Hoen A. G., O'Malley A. J. and Li H. (2018).
 Conditional regression based on a multivariate zero-inflated logistic-normal model for
-microbiome relative abundance data.
-Statistics in Biosciences, 10(3): 587--608.
+microbiome relative abundance data. Statistics in Biosciences, 10(3): 587--608.
 
 Friedman, J., Hastie, T. and Tibshirani, R. (2010) Regularization Paths for Generalized Linear
 Models via Coordinate Descent. Journal of Statistical Software, Vol. 33(1), 1-22.
+
+Aitchison J. (1986). The statistical analysis of compositional data. Chapman & Hall.
 }
 
 \author{

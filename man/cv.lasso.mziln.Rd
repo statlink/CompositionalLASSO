@@ -59,10 +59,14 @@ The regression coefficients for the optimal value of \eqn{\lambda}.
 }
 
 \references{
-Aitchison J. (1986). The statistical analysis of compositional data. Chapman & Hall.
+Li Z., Lee K., Karagas M. R., Madan J. C., Hoen A. G., O'Malley A. J. and Li H. (2018).
+Conditional regression based on a multivariate zero-inflated logistic-normal model for
+microbiome relative abundance data. Statistics in Biosciences, 10(3): 587--608.
 
 Friedman, J., Hastie, T. and Tibshirani, R. (2010) Regularization Paths for Generalized Linear Models via
 Coordinate Descent. Journal of Statistical Software, Vol. 33(1), 1-22.
+
+Aitchison J. (1986). The statistical analysis of compositional data. Chapman & Hall.
 }
 
 \author{
