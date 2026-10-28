@@ -49,7 +49,10 @@ cv.lasso.klcompreg <- function(y, x, lambda = NULL, nlambda = 100, type = "group
   kld <- cbind( lambda, Rfast::colmeans(kld) )
   colnames(kld) <- c("lambda", "KLD")
   lopt <- which.min(kld[, 2])
-  list(kld = kld, lambda.opt = lambda[lopt], be = mod$be[[ lopt ]] )
+  opt <- kld[lopt, ]
+  names(opt) <- c("lambda", "KLD")
+
+  list(kld = kld, opt = opt, be = mod$be[[ lopt ]] )
 
 }
 

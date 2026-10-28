@@ -15,7 +15,7 @@ is implemented for compositional data with zero values present.
 Package: \tab CompositionalLASSO\cr
 Type: \tab Package\cr
 Version: \tab 1.0 \cr
-Date: \tab 2026-10-22 \cr
+Date: \tab 2026-10-28 \cr
 }
 }
 

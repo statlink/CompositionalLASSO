@@ -53,8 +53,8 @@ A list including:
 \item{kld}{
 The cross-validated Kullback-Leibler divergence for each value of \eqn{\lambda}.
 }
-\item{lambda.opt}{
-The optimal value of \eqn{\lambda}.
+\item{opt}{
+The optimal value of \eqn{\lambda} and its correesponding KLD.
 }
 \item{be}{
 The regression coefficients for the optimal value of \eqn{\lambda}.

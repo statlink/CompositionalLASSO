@@ -51,6 +51,9 @@ cv.lasso.compreg <- function(y, x, lambda = NULL, nlambda = 100, nfolds = 10,
   kld <- cbind( lambda, Rfast::colmeans(kld) )
   colnames(kld) <- c("lambda", "KLD")
   lopt <- which.min(kld[, 2])
-  list(kld = kld, lambda.opt = lambda[lopt], be = be[[ lopt ]] )
+  opt <- kld[lopt, ]
+  names(opt) <- c("lambda", "KLD")
+
+  list(kld = kld, opt = opt, be = be[[ lopt ]] )
 
 }
