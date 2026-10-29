@@ -1,5 +1,8 @@
 cv.lasso.klcompreg <- function(y, x, lambda = NULL, nlambda = 100, type = "grouped", nfolds = 10,
                                folds = NULL, seed = NULL) {
+
+  runtime <- proc.time()
+
   n <- dim(y)[1]   ;   D <- dim(y)[2]
   ina <- 1:n
   if ( is.null(folds) )  folds <- Compositional::makefolds(ina, nfolds = nfolds, stratified = FALSE, seed = seed)
@@ -53,7 +56,8 @@ cv.lasso.klcompreg <- function(y, x, lambda = NULL, nlambda = 100, type = "group
   opt <- kld[lopt, ]
   names(opt) <- c("lambda", "KLD")
 
-  list(kld = kld, opt = opt, be = be[[ lopt ]] )
+  runtime <- proc.time - runtime
 
+  list(runtime = runtime, kld = kld, opt = opt, be = be[[ lopt ]] )
 }
 

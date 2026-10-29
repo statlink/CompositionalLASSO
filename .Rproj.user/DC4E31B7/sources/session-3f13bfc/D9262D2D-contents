@@ -1,6 +1,7 @@
 cv.lasso.mziln <- function(y, x, lambda = NULL, nlambda = 100, nfolds = 10,
                              folds = NULL, seed = NULL) {
 
+  runtime <- proc.time()
   if ( is.null( colnames(x) ) ) {
     p <- dim(x)[2]
     nama <- c("constant", paste("X", 1:p, sep = "") )
@@ -89,5 +90,7 @@ cv.lasso.mziln <- function(y, x, lambda = NULL, nlambda = 100, nfolds = 10,
   opt <- kld[lopt, ]
   names(opt) <- c("lambda", "KLD")
 
-  list(kld = kld, opt = opt, be = be[[ lopt ]] )
+  runtime <- proc.time - runtime
+
+  list(runtime = runtime, kld = kld, opt = opt, be = be[[ lopt ]] )
 }

@@ -1,5 +1,8 @@
 cv.lasso.compreg <- function(y, x, lambda = NULL, nlambda = 100, nfolds = 10,
                                folds = NULL, seed = NULL) {
+
+  runtime <- proc.time()
+
   D <- dim(y)[2]   ;   d <- D - 1
   z <- Compositional::alr(y)
   n <- dim(y)[1]  ## sample size
@@ -55,6 +58,8 @@ cv.lasso.compreg <- function(y, x, lambda = NULL, nlambda = 100, nfolds = 10,
   opt <- kld[lopt, ]
   names(opt) <- c("lambda", "KLD")
 
-  list(kld = kld, opt = opt, be = be[[ lopt ]] )
+  runtime <- proc.time - runtime
+
+  list(runtime = runtime, kld = kld, opt = opt, be = be[[ lopt ]] )
 
 }

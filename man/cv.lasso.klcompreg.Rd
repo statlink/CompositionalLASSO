@@ -50,6 +50,9 @@ the penalty parameter in LASSO.
 
 \value{
 A list including:
+\item{runtime}{
+The runtime of the process.
+}
 \item{kld}{
 The cross-validated Kullback-Leibler divergence for each value of \eqn{\lambda}.
 }
