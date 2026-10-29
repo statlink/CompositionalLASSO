@@ -90,7 +90,7 @@ cv.lasso.mziln <- function(y, x, lambda = NULL, nlambda = 100, nfolds = 10,
   opt <- kld[lopt, ]
   names(opt) <- c("lambda", "KLD")
 
-  runtime <- proc.time - runtime
+  runtime <- proc.time() - runtime
 
   list(runtime = runtime, kld = kld, opt = opt, be = be[[ lopt ]] )
 }

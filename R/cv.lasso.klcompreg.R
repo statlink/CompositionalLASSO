@@ -56,7 +56,7 @@ cv.lasso.klcompreg <- function(y, x, lambda = NULL, nlambda = 100, type = "group
   opt <- kld[lopt, ]
   names(opt) <- c("lambda", "KLD")
 
-  runtime <- proc.time - runtime
+  runtime <- proc.time() - runtime
 
   list(runtime = runtime, kld = kld, opt = opt, be = be[[ lopt ]] )
 }
