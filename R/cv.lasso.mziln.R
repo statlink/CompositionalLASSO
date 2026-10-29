@@ -72,13 +72,14 @@ cv.lasso.mziln <- function(y, x, lambda = NULL, nlambda = 100, nfolds = 10,
 
     mod <- glmnet::glmnet(Xtrain, Utrain, nlambda = nlambda, lambda = lambda, family = "gaussian")
     len <- length(mod$lambda)
+    ntest <- dim(ytest)[1]
     for ( j in 1:len ) {
       B <- matrix(mod$beta[, j], ncol = d)
       mu <- cbind( exp( xtest %*% B ), 1 )
       est <- mu / Rfast::rowsums(mu)
       kl <- ytest * log(ytest / est)
       kl[is.infinite(kl)] <- NA
-      kld[k, j] <- sum(kl, na.rm = TRUE)
+      kld[k, j] <- sum(kl, na.rm = TRUE) / ntest
     }
   }
 

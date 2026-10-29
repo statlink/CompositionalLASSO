@@ -1,0 +1,43 @@
+lasso.klcompreg <- function(y, x, lambda = NULL, nlambda = 100, type = "grouped", xnew = NULL) {
+  D <- dim(y)[2]
+  if ( is.null( colnames(x) ) ) {
+    p <- dim(x)[2]
+    nama <- c("constant", paste("X", 1:p, sep = "") )
+  } else  nama <- c("constant", colnames(x) )
+  colnames(x) <- nama[-1]
+
+  mod <- glmnet::glmnet(x, y, nlambda = nlambda, lambda = lambda, family = "multinomial", type.multinomial = type)
+  lambda <- mod$lambda
+  nlambda <- length(lambda)
+  be <- list()
+  beta <- mod$beta
+  a0 <- mod$a0
+
+  for ( i in 1:nlambda ) {
+    ini <- beta[[ 1 ]][, i]
+    for ( j in 2:D )  ini <- cbind(ini, beta[[ j ]][, i])
+    be[[ i ]] <- rbind(mod$a0[, i], ini)
+    colnames(be[[ i ]]) <- paste0("Y", 1:D)
+    rownames(be[[ i ]]) <- nama
+  }
+  names(be) <- paste("lambda=", lambda, sep="")
+
+  est <- predict( mod, newx = x, type = "response" )
+  info <- cbind(lambda, 0)
+  for ( i in 1:nlambda ) {
+    kl <- y * log(y / est[, , i])
+    kl[ is.infinite(kl) ] <- NA
+    info[i, 2] <- sum(kl, na.rm = TRUE)
+  }
+  colnames(info) <- c("lambda", "KLD")
+
+  est <- NULL
+  if ( !is.null(xnew) ) {
+    est <- list()
+    mu <- predict(mod, newx = xnew, type = "response")
+    for ( i in 1:nlambda )  est[[ i ]] <- mu[, , i]
+    names(est) <- paste("lambda=", lambda, sep="")
+  }
+
+  list(be = be, info = info, est = est)
+}

@@ -40,11 +40,12 @@ cv.lasso.compreg <- function(y, x, lambda = NULL, nlambda = 100, nfolds = 10,
     ztrain <- z[ -folds[[ k ]], ]
     mod <- glmnet::glmnet(xtrain, ztrain, nlambda = nlambda, lambda = lambda, family = "mgaussian")
     est <- predict(mod, newx = xtest)
+    ntest <- dim(ytest)[1]
     for ( j in 1:dim(est)[3] ) {
       yest <- Compositional::alrinv( est[, , j] )
       kl <- ytest * log(ytest / yest)
       kl[is.infinite(kl)] <- NA
-      kld[k, j] <- sum(kl, na.rm = TRUE)
+      kld[k, j] <- sum(kl, na.rm = TRUE) / ntest
     }
   }
 

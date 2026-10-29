@@ -39,10 +39,11 @@ cv.lasso.klcompreg <- function(y, x, lambda = NULL, nlambda = 100, type = "group
     mod <- glmnet::glmnet(xtrain, ytrain, family = "multinomial", nlambda = nlambda, lambda = lambda,
                           type.multinomial = type)
     est <- predict(mod, newx = xtest, type = "response")
+    ntest <- dim(ytest)[1]
     for ( j in 1:dim(est)[3] ) {
       kl <- ytest * log(ytest / est[, , i])
       kl[is.infinite(kl)] <- NA
-      kld[k, j] <- sum(kl, na.rm = TRUE)
+      kld[k, j] <- sum(kl, na.rm = TRUE) / ntest
     }
   }
 
@@ -52,7 +53,7 @@ cv.lasso.klcompreg <- function(y, x, lambda = NULL, nlambda = 100, type = "group
   opt <- kld[lopt, ]
   names(opt) <- c("lambda", "KLD")
 
-  list(kld = kld, opt = opt, be = mod$be[[ lopt ]] )
+  list(kld = kld, opt = opt, be = be[[ lopt ]] )
 
 }
 
