@@ -44,7 +44,7 @@ cv.lasso.klcompreg <- function(y, x, lambda = NULL, nlambda = 100, type = "group
     est <- predict(mod, newx = xtest, type = "response")
     ntest <- dim(ytest)[1]
     for ( j in 1:dim(est)[3] ) {
-      kl <- ytest * log(ytest / est[, , i])
+      kl <- ytest * log(ytest / est[, , j])
       kl[is.infinite(kl)] <- NA
       kld[k, j] <- sum(kl, na.rm = TRUE) / ntest
     }
