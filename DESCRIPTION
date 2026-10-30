@@ -2,7 +2,7 @@ Package: CompositionalLASSO
 Type: Package
 Title: LASSO Compositional Data Regression
 Version: 1.0
-Date: 2026-10-29
+Date: 2026-10-30
 Authors@R: person("Michail", "Tsagris", role = c("aut", "cre"), email = "mtsagris@uoc.gr")
 Author: Michail Tsagris [aut, cre]
 Maintainer: Michail Tsagris <mtsagris@uoc.gr>
