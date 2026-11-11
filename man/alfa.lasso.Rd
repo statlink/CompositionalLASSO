@@ -82,7 +82,8 @@ R implementation and documentation: Michail Tsagris \email{mtsagris@uoc.gr}.
 
 \examples{
 y <- as.matrix(iris[, 1])
-x <- rdiri(150, runif(20, 2, 5) )
+x <- matrix( rgamma(150 * 20, 3, 1), ncol = 20 )
+x <- x / Rfast::rowsums(x)
 mod <- alfa.lasso(y, x, a = c(0, 0.5, 1))
 }
 
