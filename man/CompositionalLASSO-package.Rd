@@ -14,8 +14,8 @@ is implemented for compositional data with zero values present.
 \tabular{ll}{
 Package: \tab CompositionalLASSO\cr
 Type: \tab Package\cr
-Version: \tab 1.0 \cr
-Date: \tab 2026-10-30 \cr
+Version: \tab 1.1 \cr
+Date: \tab 2026-10-11 \cr
 }
 }
 
