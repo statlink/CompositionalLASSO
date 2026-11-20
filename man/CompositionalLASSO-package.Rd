@@ -6,8 +6,9 @@ Regression for Compositional Data with Zero Values
 }
 
 \description{
-A multivariate zero inflated logistic normal regression model
-is implemented for compositional data with zero values present.
+LASSO (Least Absolute Shrinkage and Selection Operator) regression for compositional responses
+and Euclidean predictors, or Euclidean responses and compositional predictors with and without
+zero values present.
 }
 
 \details{
@@ -15,7 +16,7 @@ is implemented for compositional data with zero values present.
 Package: \tab CompositionalLASSO\cr
 Type: \tab Package\cr
 Version: \tab 1.1 \cr
-Date: \tab 2026-10-11 \cr
+Date: \tab 2026-11-20 \cr
 }
 }
 
